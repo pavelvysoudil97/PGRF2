@@ -1,7 +1,10 @@
 package rasterOperations;
 
-public class Raster {
+public interface Raster<T> {
 
-    
+    T getPixel();
+    void setPixel(int x, int y, Integer value);
+
+
     
 }
