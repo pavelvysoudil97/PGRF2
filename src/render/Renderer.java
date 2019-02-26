@@ -67,9 +67,12 @@ public class Renderer {
             double t1 = -b.getPosition().getZ()/
                         (a.getPosition().getZ() - b.getPosition().getZ());
             Vertex ab = lerp.lerp(b,a,t1);
-            Vertex ac = ;
-            rt.rasterize(a,ab,ac)
+            Vertex ac =
+            rt.rasterize(a,ab,ac);
+
         }
+        //rt.rasterize(a,b,ac);
+        //rt.rasterize(bc,b,ac);
 
     }
 }
