@@ -14,6 +14,6 @@ public class VisibilityZBuffer {
     }
 
     public void init(){
-        
+
     }
 }
