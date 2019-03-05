@@ -12,4 +12,23 @@ public abstract class Solid {
         return geometry;
     }
 
+    public void setGeometry(List<Vertex> geometry) {
+        this.geometry = geometry;
+    }
+
+    public List<Integer> getIndicies() {
+        return indicies;
+    }
+
+    public void setIndicies(List<Integer> indicies) {
+        this.indicies = indicies;
+    }
+
+    public List<Part> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<Part> parts) {
+        this.parts = parts;
+    }
 }

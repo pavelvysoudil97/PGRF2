@@ -9,11 +9,19 @@ public class VisibilityZBuffer {
         this.zBuffer = new ZBuffer<>(width, height);
     }
 
-    public void putPixel(int x, int y, float z, int value){
-
+    public void put(int x, int y, float z, int color){
+        if(z >=0 && z< zBuffer.getPixel(x, y));
     }
 
     public void init(){
 
+    }
+
+    public int getWidth(){
+        return zBuffer.getWidth();
+    }
+    public int getHieght(){
+
+        return zBuffer.getHeight();
     }
 }
