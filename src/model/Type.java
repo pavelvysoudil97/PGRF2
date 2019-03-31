@@ -1,4 +1,7 @@
 package model;
 
 public enum Type {
+
+    POINTS, TRIANGLES, PARTS, LINES, LINESTRIP, LINELOOP,TRIANGLESTRIP, TRIANGLEFAN
+
 }

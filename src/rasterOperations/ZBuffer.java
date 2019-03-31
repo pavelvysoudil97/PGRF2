@@ -13,11 +13,14 @@ public class ZBuffer<T> implements Raster<T> {
     public ZBuffer(int width, int height){
         this.height = height;
         this.width = width;
-        position = new ArrayList<T>(width * height);
+        position = new ArrayList<>(width * height);
+
+        System.out.print(position.size());
     }
 
     @Override
     public T getPixel(int x, int y) {
+
         return position.get(y * width + x);
     }
 

@@ -1,12 +1,13 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Solid {
 
-    List<Vertex> geometry;
-    List<Integer> indicies;
-    List<Part>parts;
+    List<Vertex> geometry = new ArrayList<>();
+    List<Integer> indicies = new ArrayList<>();
+    List<Part>parts = new ArrayList<>();
 
     public List<Vertex> getGeometry() {
         return geometry;

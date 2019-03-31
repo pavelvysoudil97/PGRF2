@@ -1,6 +1,5 @@
 package util;
 
-import model.Vertex;
 
 public class Lerp <V extends Vectorizable<V>>{
 
