@@ -5,10 +5,10 @@ import model.Part;
 import model.Solid;
 import model.Vertex;
 import rasterOperations.OurImageBuffer;
-import transforms.Mat4;
-import transforms.Mat4Identity;
-import transforms.Point3D;
+import transforms.*;
 import util.Lerp;
+
+import java.util.List;
 
 public class Renderer {
 
@@ -16,10 +16,17 @@ public class Renderer {
     private Mat4 modelMatrix = new Mat4Identity();
     private Mat4 transformMatrix = new Mat4Identity();
 
-    private Mat4 finalMatrix = modelMatrix.mul(viewMatrix.mul(transformMatrix));
+    private Mat4 finalMatrix = modelMatrix.mul(viewMatrix).mul(transformMatrix);
+
+    private Camera camera;
 
     private RasterizerTriangle rt;
     private RasterizerLine rl;
+
+    public void setRl(RasterizerLine rl) {
+        this.rl = rl;
+    }
+
     private RasterizerPoint rp;
     private Lerp<Vertex> lerp = new Lerp<>();
 
@@ -30,33 +37,39 @@ public class Renderer {
     }
 
 
-    public void render(Solid solid){
-        for(Part part : solid.getParts()){
-            switch(part.getType()){
-                case POINTS:
-                    for (int i = 0; i < part.getCount(); i++) {
-                        Vertex vertex = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart()));
-                        renderPoint(vertex);
-                    }
-                    break;
-                case LINES:
+    public void render(List<Solid> solids){
 
-                    for (int i = 0; i < part.getCount(); i++) {
-                        Vertex vA = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart()));
-                        Vertex vB = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart() + 1));
-                        renderLine(vA, vB);
-                    }
+        for (Solid solid: solids
+             ) {
 
-                    break;
-                case TRIANGLES:
-                    for(int i = 0; i< part.getCount(); i++){
-                        Vertex a,b,c;
-                        a = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart()));
-                        b = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart()) + 1);
-                        c = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart()) + 2);
-                        renderTriangle(a, b, c);
-                    }
-                    break;
+
+            for (Part part : solid.getParts()) {
+                switch (part.getType()) {
+                    case POINTS:
+                        for (int i = 0; i < part.getCount(); i++) {
+                            Vertex vertex = solid.getGeometry().get(solid.getIndicies().get(i + part.getStart()));
+                            renderPoint(vertex);
+                        }
+                        break;
+                    case LINES:
+
+                        for (int i = 0; i < part.getCount(); i++) {
+                            Vertex vA = solid.getGeometry().get(solid.getIndicies().get(2 * i + part.getStart()));
+                            Vertex vB = solid.getGeometry().get(solid.getIndicies().get(2 * i + part.getStart() + 1));
+                            renderLine(vA, vB);
+                        }
+
+                        break;
+                    case TRIANGLES:
+                        for (int i = 0; i < part.getCount(); i++) {
+                            Vertex a, b, c;
+                            a = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart()));
+                            b = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart() + 1));//zmena +1 a +2
+                            c = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart() + 2));
+                            renderTriangle(a, b, c);
+                        }
+                        break;
+                }
             }
         }
 
@@ -77,9 +90,9 @@ public class Renderer {
         }
 
         if(vB.getPosition().getZ() < 0 && vA.getPosition().getZ() > 0){
-            //TODO dopocitat
-            double t1 = -vB.getPosition().getZ() / (vA.getPosition().getZ() - vB.getPosition().getZ());
-            Vertex ab =lerp.lerp(vB, vA, t1);
+            double t1 = -vA.getPosition().getZ()/
+                    (vB.getPosition().getZ() - vA.getPosition().getZ());
+            Vertex ab = lerp.lerp(vA,vB,t1);
             rl.rasterize(vA, ab);
             return;
         }
@@ -123,10 +136,7 @@ public class Renderer {
                                 c.getPosition().getZ()> c.getPosition().getW()) ){
             return;
         }
-        {
 
-
-        }
         //TODO orez z>= 0
 
         Vertex helpPoint;
@@ -151,7 +161,7 @@ public class Renderer {
         if(a.getPosition().getZ() < 0){
             return;
         }
-        // 2. - NEDORESENE hazi null
+
         if(b.getPosition().getZ() < 0 && a.getPosition().getZ() > 0){
             double t1 = -a.getPosition().getZ()/
                         (b.getPosition().getZ() - a.getPosition().getZ());
@@ -178,5 +188,72 @@ public class Renderer {
             rt.rasterize(a, b, c);
         }
 
+
+    }
+
+    public Solid rotateSolidByX(Solid solidToRotate, double angleToRotate){
+
+        for(int i = 0; i < solidToRotate.getGeometry().size(); i++){
+            Point3D point3D = solidToRotate.getGeometry().get(i).getPosition();
+            solidToRotate.getGeometry().set(i,new Vertex (point3D.mul(new Mat4RotX(angleToRotate))));
+        }
+        return solidToRotate;
+    }
+    public Solid rotateSolidByY(Solid solidToRotate, double angleToRotate){
+
+        for(int i = 0; i < solidToRotate.getGeometry().size(); i++){
+            Point3D point3D = solidToRotate.getGeometry().get(i).getPosition();
+            solidToRotate.getGeometry().set(i,new Vertex( point3D.mul(new Mat4RotY(angleToRotate))));
+        }
+        return solidToRotate;
+    }
+    public Solid rotateSolidByZ(Solid solidToRotate, double angleToRotate){
+
+        for(int i = 0; i < solidToRotate.getGeometry().size(); i++){
+            Point3D point3D = solidToRotate.getGeometry().get(i).getPosition();
+            solidToRotate.getGeometry().set(i,new Vertex( point3D.mul(new Mat4RotZ(angleToRotate))));
+        }
+        return solidToRotate;
+    }
+
+
+    public Mat4 getViewMatrix() {
+        return viewMatrix;
+    }
+
+    public void setViewMatrix(Mat4 viewMatrix) {
+        this.viewMatrix = viewMatrix;
+    }
+
+    public Mat4 getModelMatrix() {
+        return modelMatrix;
+    }
+
+    public void setModelMatrix(Mat4 modelMatrix) {
+        this.modelMatrix = modelMatrix;
+    }
+
+    public Mat4 getTransformMatrix() {
+        return transformMatrix;
+    }
+
+    public void setTransformMatrix(Mat4 transformMatrix) {
+        this.transformMatrix = transformMatrix;
+    }
+
+    public Mat4 getFinalMatrix() {
+        return finalMatrix;
+    }
+
+    public void setFinalMatrix(Mat4 finalMatrix) {
+        this.finalMatrix = finalMatrix;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 }

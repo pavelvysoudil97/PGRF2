@@ -4,7 +4,9 @@ import model.Vertex;
 import rasterOperations.VisibilityZBuffer;
 import transforms.Col;
 import transforms.Point3D;
+import transforms.Vec3D;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public class RasterizerTriangle {
@@ -25,6 +27,8 @@ public class RasterizerTriangle {
     };
 
     public void rasterize(Vertex a, Vertex b, Vertex c){
+
+
         a = a.dehomog();
         b = b.dehomog();
         c = c.dehomog();
@@ -100,7 +104,8 @@ public class RasterizerTriangle {
             for(int x = Math.max((int)x1,0); x < (int) Math.min(x2, width); x++){
                 double t = (x - x1) / (x2 - x1);
                 double z = z1 * (1 - t)+ z2 * t;
-                vis.put(x, y, (float) z, new Col(0xff));//shader.apply(new Vertex(new Point3D(x, y, z))));
+                vis.put(x, y, (float) z, new Col(0x00ff00));//shader.apply(new Vertex(new Point3D(x, y, z))));
+                //vis.put(x, y, (float) z, a.get);
             }
         }
         for(int y = (int) Math.max(yB, 0); y < (int) Math.min(yC, height); y++){
@@ -125,9 +130,13 @@ public class RasterizerTriangle {
             for(int x = Math.max((int)x1,0); x < (int) Math.min(x2, width); x++){
                 double t = (x - x1) / (x2 - x1);
                 double z = z1 * (1 - t)+ z2 * t;
-                vis.put(x, y, (float) z, new Col(0xff));//, shader.apply(new Vertex(new Point3D(x, y, z))));
+                vis.put(x, y, (float) z, new Col(0xff0000));//, shader.apply(new Vertex(new Point3D(x, y, z))));
             }
         }
 
     }
+    public VisibilityZBuffer getVis() {
+        return vis;
+    }
+
 }

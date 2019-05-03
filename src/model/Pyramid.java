@@ -15,18 +15,17 @@ public class Pyramid extends Solid {
         geometry.add(new Vertex(new Point3D(size, 0, size)));
         geometry.add(new Vertex(new Point3D(size, size, size)));
         geometry.add(new Vertex(new Point3D(0, size, size)));
-        geometry.add(new Vertex(new Point3D(0.5 * size, 0.5 * size, 0)));
+        geometry.add(new Vertex(new Point3D(0.5 * size, 0.5 * size, size * 2)));
 
-        indicies.add(0); indicies.add(1);
-        indicies.add(1); indicies.add(3);
-        indicies.add(2); indicies.add(3);
-        indicies.add(2); indicies.add(0);
-        indicies.add(0);indicies.add(4);
-        indicies.add(1);indicies.add(4);
-        indicies.add(2);indicies.add(4);
-        indicies.add(3);indicies.add(4);
+        indicies.add(0); indicies.add(1); indicies.add(2);
+        indicies.add(0);  indicies.add(2); indicies.add(3);
+        indicies.add(0); indicies.add(1); indicies.add(4);
+        indicies.add(1); indicies.add(2); indicies.add(4);
+        indicies.add(2); indicies.add(3); indicies.add(4);
+        indicies.add(0); indicies.add(3); indicies.add(4);
 
-        parts.add(new Part(Type.LINES, 0, 2));
+
+        parts.add(new Part(Type.TRIANGLES, 0, 6));
     }
 }
 

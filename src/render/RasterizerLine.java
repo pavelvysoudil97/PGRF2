@@ -32,7 +32,7 @@ public class RasterizerLine {
         double xA = ((width - 1) * (a.getPosition().getX() + 1))/2;
         double yA =((height - 1) * (1 - a.getPosition().getY()))/2;
         double xB = ((width - 1) * (b.getPosition().getX() + 1))/2;
-        double yB =((height - 1) * (1 - b.getPosition().getY()))/2;
+        double yB =((height ) * (1 - b.getPosition().getY()))/2;
 
         double zA = a.getPosition().getZ();
         double zB = b.getPosition().getZ();
