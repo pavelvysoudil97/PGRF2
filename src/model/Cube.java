@@ -76,6 +76,16 @@ public class Cube extends Solid {
 
 
 
-        parts.add(new Part(Type.TRIANGLES, 0, 12));
+        parts.add(new Part(Type.TRIANGLES, 0, 2, new Col(255,0,255)));
+        parts.add(new Part(Type.TRIANGLES, 1, 1, new Col(0,0,255)));
+        parts.add(new Part(Type.TRIANGLES, 2, 1, new Col(255,0,0)));
+        parts.add(new Part(Type.TRIANGLES, 3, 1, new Col(0,255,255)));
+        parts.add(new Part(Type.TRIANGLES, 4, 1, new Col(0,255,0)));
+        parts.add(new Part(Type.TRIANGLES, 5, 1, new Col(255,0,255)));
+
+        //parts.add(new Part(Type.TRIANGLES, 2, 2, new Col(0,255,255)));
+       // parts.add(new Part(Type.TRIANGLES, 6, 2, new Col(255,0,255)));
+       // parts.add(new Part(Type.TRIANGLES, 9, 3, new Col(0,0,255)));
+
     }
 }

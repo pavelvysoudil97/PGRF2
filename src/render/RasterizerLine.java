@@ -43,7 +43,7 @@ public class RasterizerLine {
             double x =((xA*(1 - s1)) + (xB * s1));
             double z =((zA*(1 - s1)) + (zB * s1));
 
-            vis.put((int)x, (int) y,(float)z,shader.apply(new Vertex(new Point3D(x, y, z))));
+            vis.put((int)x, (int) y, (float)z, new Col(0xff0000));//,shader.apply(new Vertex(new Point3D(x, y, z))));
         }
 
     }

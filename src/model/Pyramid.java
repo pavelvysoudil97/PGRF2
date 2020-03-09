@@ -1,5 +1,6 @@
 package model;
 
+import transforms.Col;
 import transforms.Point3D;
 
 
@@ -11,7 +12,7 @@ public class Pyramid extends Solid {
 
         double size = inputSize / 2;
 
-        geometry.add(new Vertex(new Point3D(0, 0, size)));
+        geometry.add(new Vertex(new Point3D(0, 0, 0)));
         geometry.add(new Vertex(new Point3D(size, 0, size)));
         geometry.add(new Vertex(new Point3D(size, size, size)));
         geometry.add(new Vertex(new Point3D(0, size, size)));
@@ -25,7 +26,8 @@ public class Pyramid extends Solid {
         indicies.add(0); indicies.add(3); indicies.add(4);
 
 
-        parts.add(new Part(Type.TRIANGLES, 0, 6));
+        parts.add(new Part(Type.TRIANGLES, 0, 3, new Col(255,255,0)));
+        parts.add(new Part(Type.TRIANGLES, 3, 3, new Col(255,0,255)));
     }
 }
 

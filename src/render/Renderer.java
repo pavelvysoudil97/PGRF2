@@ -21,7 +21,7 @@ public class Renderer {
     private Camera camera;
 
     private RasterizerTriangle rt;
-    private RasterizerLine rl;
+    private RasterizerLine rl ;
 
     public void setRl(RasterizerLine rl) {
         this.rl = rl;
@@ -32,8 +32,8 @@ public class Renderer {
 
     //private OurImageBuffer ourImageBuffer;
 
-    public Renderer(RasterizerTriangle rt){
-        this.rt = rt;
+    public Renderer(RasterizerTriangle rt, RasterizerLine rl){
+        this.rt = rt; this.rl = rl;
     }
 
 
@@ -66,7 +66,7 @@ public class Renderer {
                             a = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart()));
                             b = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart() + 1));//zmena +1 a +2
                             c = solid.getGeometry().get(solid.getIndicies().get(3 * i + part.getStart() + 2));
-                            renderTriangle(a, b, c);
+                            renderTriangle(a, b, c, part.getColor());
                         }
                         break;
                 }
@@ -101,7 +101,7 @@ public class Renderer {
 
     }
 
-    private void renderTriangle(Vertex a, Vertex b, Vertex c){
+    private void renderTriangle(Vertex a, Vertex b, Vertex c, Col col){
 
         //PGRF1 - transformace a orez
 
@@ -169,7 +169,7 @@ public class Renderer {
                     (c.getPosition().getZ() - a.getPosition().getZ());
             Vertex ab = lerp.lerp(a,b,t1);
             Vertex ac = lerp.lerp(a, c, t2);
-            rt.rasterize(a,ab,ac);
+            rt.rasterize(a,ab,ac, col);
 
             return;
         }
@@ -179,13 +179,13 @@ public class Renderer {
             double t2 = -a.getPosition().getZ()/(c.getPosition().getZ() - a.getPosition().getZ());
             Vertex bc = lerp.lerp(b, c, t1);
             Vertex ac = lerp.lerp(a, c, t2);
-            rt.rasterize(a, b, ac);
-            rt.rasterize(bc, b, ac);
+            rt.rasterize(a, b, ac,col);
+            rt.rasterize(bc, b, ac, col);
             return;
         }
 
         if(c.getPosition().getZ() > 0){
-            rt.rasterize(a, b, c);
+            rt.rasterize(a, b, c, col);
         }
 
 

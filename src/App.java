@@ -24,7 +24,7 @@ public class App extends JFrame {
 
     private int startDragX;
     private int startDragY;
-    private int moveX, moveY, moveZ;
+    private int moveX, moveY, moveZ = 0;
 
     private JPanel panel;
     private OurImageBuffer image = new OurImageBuffer(width, height);
@@ -61,9 +61,11 @@ public class App extends JFrame {
 
 
 
-        renderer = new Renderer(rt);
+        renderer = new Renderer(rt, rl);
         Cube cube = new Cube();
         Pyramid pyramid = new Pyramid(4);
+        Surface surface = new Surface(5);
+        //Arrow arrow = new Arrow();
         camera = new Camera(new Vec3D(9, 7, -2), -2.5,0.3, 0.3, true);
 
         renderer.setTransformMatrix(new Mat4PerspRH(Math.PI / 4, height / (float) width, 1, 200));
@@ -71,29 +73,33 @@ public class App extends JFrame {
 
         solids.add(cube);
         solids.add(pyramid);
+        //solids.add(arrow);
+        //solids.add(surface);
 
         renderer.render(solids);
 
-       // renderer.setRl(rl);
-        //Arrow arrow = new Arrow();
-       // renderer.render(arrow);
-
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
-        setSize(width, height);
+
+        setSize(width, height+100);
         setResizable(false);
         setTitle("PGRF2 - PLOCHY");
-        panel = new GraphicsPanel(vis);
-        /*JButton legendButton = new JButton("Legend");
-        legendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                createLegendFrame();
-            }
-        });
-        add(legendButton);*/
-        add(panel);
 
+
+
+        panel = new GraphicsPanel(vis);
+        panel.setFocusable(true);
+        panel.requestFocus();
+
+        JLabel legendLabel = new JLabel();
+        legendLabel.setText("Legend");
+        add(legendLabel, BorderLayout.SOUTH);
+        legendLabel.setText("<html>To control camera : Arrow Up,Down,Left,Right <BR> \n " +
+                " Switch Projection : O - Ortoghonal / P - Perspective<BR>\n" +
+                "\n To rotate with Cube : x - by X axis / y - by Y axis / z - by Z axis</html>");
+
+        add(panel, BorderLayout.CENTER);
+
+        setVisible(true);
     }
 
     private void initControlls(){
@@ -127,7 +133,7 @@ public class App extends JFrame {
             }
         });
 
-        addKeyListener(new KeyAdapter() {
+        panel.addKeyListener(new KeyAdapter() {
 
             @Override
             public void keyReleased(KeyEvent e) {
@@ -136,12 +142,12 @@ public class App extends JFrame {
                     // Arrow moves - up, down, left, right
                     case KeyEvent.VK_UP:
                         System.out.println("Camera position" + " x: " + camera.getPosition().getX() + " y: " + camera.getPosition().getY() + " z: " + camera.getPosition().getZ());
-                        camera = camera.forward(0.2);
+                        camera = camera.up(0.2);
                         renderer.setViewMatrix(camera.getViewMatrix());
                          break;
 
                     case KeyEvent.VK_DOWN:
-                        camera = camera.backward(0.2);
+                        camera = camera.down(0.2);
                         renderer.setViewMatrix(camera.getViewMatrix());
                         System.out.println("Camera position" + " x: " + camera.getPosition().getX() + " y: " + camera.getPosition().getY() + " z: " + camera.getPosition().getZ());
                         break;
@@ -157,25 +163,24 @@ public class App extends JFrame {
 
                     // W, A, S, D moves
                     case KeyEvent.VK_A:
-                        moveX -= 0.1;
-                        camera.move(new Vec3D(moveX, moveY, moveZ));
-                        renderer.render(solids);
+                        System.out.println("Camera position" + " x: " + camera.getPosition().getX() + " y: " + camera.getPosition().getY() + " z: " + camera.getPosition().getZ());
+                        camera = camera.left(0.2);
+                        renderer.setViewMatrix(camera.getViewMatrix());
                         break;
                     case KeyEvent.VK_W:
-                        moveZ += 0.1;
-                        camera.move(new Vec3D(moveX, moveY, moveZ));
-                        renderer.render(solids);
+                        System.out.println("Camera position" + " x: " + camera.getPosition().getX() + " y: " + camera.getPosition().getY() + " z: " + camera.getPosition().getZ());
+                        camera = camera.forward(0.2);
+                        renderer.setViewMatrix(camera.getViewMatrix());
                         break;
                     case KeyEvent.VK_S:
-                        moveZ -= 0.1;
-                        camera.move(new Vec3D(moveX, moveY, moveZ));
-                        renderer.render(solids);
+                        System.out.println("Camera position" + " x: " + camera.getPosition().getX() + " y: " + camera.getPosition().getY() + " z: " + camera.getPosition().getZ());
+                        camera = camera.backward(0.2);
+                        renderer.setViewMatrix(camera.getViewMatrix());
                         break;
                     case KeyEvent.VK_D:
-                        moveX += 0.1;
-                        camera.move(new Vec3D(moveX, moveY, moveZ));
-                        renderer.render(solids);
                         System.out.println("Camera position" + " x: " + camera.getPosition().getX() + " y: " + camera.getPosition().getY() + " z: " + camera.getPosition().getZ());
+                        camera = camera.right(0.2);
+                        renderer.setViewMatrix(camera.getViewMatrix());
                         break;
 
                     //ROTACE
@@ -208,17 +213,7 @@ public class App extends JFrame {
 
         }
 
-    private void createLegendFrame(){
-        JFrame legendFrame = new JFrame();
-        legendFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        legendFrame.setName("LEGEND");
-        legendFrame.setSize(250, 500);
-        JLabel legendLabel = new JLabel();
-        legendLabel.setText("To control camera : Arrow Up,Down,Left,Roght \n " +
-                " Switch Projection : O - Ortoghonal / P - Perspective\n" +
-                " To rotate with Cube : x - by X axis / y - by Y axis / z - by Z axis");
-        legendFrame.add(legendLabel);
-    }
+
 
 
 }
